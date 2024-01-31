@@ -2,15 +2,25 @@ import React, { useEffect, useState } from 'react';
 import questionsMaster from './QuestionMaster';
 import { IQuestion, IAnswers, IUserAnswers } from './types';
 
-const Question: React.FC = () => {
+interface QuestionProps {
+    handleScore(score: number, name: string): void;
+}
+
+const Question: React.FC<QuestionProps> = ({ handleScore }) => {
     const [questionList, setQuestionList] = useState<IQuestion[]>([]);
     const [selectedAnswer, setSelectedAnswer] = useState<IUserAnswers[]>([]);
     const [name, setName] = useState('');
 
     useEffect(() => {
+        init();
+    }, []);
+
+    const init = () => {
         const randomQuestions = getRandomQuestions();
         setQuestionList(randomQuestions);
-    }, []);
+        setName('');
+        setSelectedAnswer([]);
+    }
 
     const getRandomQuestions = (): IQuestion[] => {
         const shuffledQuestions = questionsMaster.sort(() => Math.random() - 0.5);
@@ -45,6 +55,12 @@ const Question: React.FC = () => {
     }
 
     const handleSubmit = () => {
+        if (name == '') {
+            alert('Please enter name.');
+            window.scrollTo(0, 0);
+            return;
+        }
+
         const answeredQuestions = selectedAnswer.length;
         if (answeredQuestions < questionList.length) {
             alert(`You have only answered ${answeredQuestions} out of ${questionList.length} questions.`);
@@ -62,10 +78,13 @@ const Question: React.FC = () => {
             }
         });
         alert(`Your score: ${score}/${questionList.length}`);
+        handleScore(score, name);
+        window.scrollTo(0, 0);
+        init();
     };
     
     return (
-        <div>
+        <div className='question'>
             <div>
                 <label>
                     Enter your name:

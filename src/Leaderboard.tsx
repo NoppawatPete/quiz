@@ -1,20 +1,21 @@
 import React from 'react';
+import { IScore } from './types';
 
 interface LeaderboardProps {
-  scores: { name: string; score: number }[];
+  scores: IScore[];
 }
 
-const Leaderboard: React.FC = () => {
+const Leaderboard: React.FC<LeaderboardProps> = ({ scores }) => {
     return (
-        <div>
+        <div className='leaderboard'>
             <h2>Leaderboard</h2>
-            {/* <ol>
+            <ol>
                 {scores.map((player, index) => (
                 <li key={index}>
                     {player.name}: {player.score}
                 </li>
                 ))}
-            </ol> */}
+            </ol>
         </div>
     );
 };
